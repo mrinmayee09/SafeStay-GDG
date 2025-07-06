@@ -72,12 +72,12 @@ export default function RoommatesPage() {
 
                 <div>
                   <Label htmlFor="year">Year of Study</Label>
-                  <Select value={filters.year} onValueChange={(value) => setFilters(prev => ({...prev, year: value}))}>
+                  <Select value={filters.year} onValueChange={(value) => setFilters(prev => ({...prev, year: value === 'any' ? '' : value}))}>
                     <SelectTrigger id="year">
                       <SelectValue placeholder="Any Year" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Any Year</SelectItem>
+                      <SelectItem value="any">Any Year</SelectItem>
                       {allYears.map((year) => (
                         <SelectItem key={year} value={year}>{year}</SelectItem>
                       ))}
