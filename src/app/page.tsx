@@ -1,163 +1,68 @@
-'use client';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Search, Shield, Star, CheckCircle, TrendingUp } from "lucide-react";
 
-import { useState, useMemo } from 'react';
-import { flats, type Flat } from '@/lib/data';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Checkbox } from '@/components/ui/checkbox';
-import { FlatCard } from '@/components/flat-card';
-import { Filter } from 'lucide-react';
+const stats = [
+    { icon: Shield, value: "500+", label: "Verified Listings", color: "text-chart-1", bgColor: "bg-chart-1/20" },
+    { icon: Star, value: "1200+", label: "Student Reviews", color: "text-chart-2", bgColor: "bg-chart-2/20" },
+    { icon: CheckCircle, value: "4.6", label: "Avg Safety Rating", color: "text-chart-3", bgColor: "bg-chart-3/20" },
+    { icon: TrendingUp, value: "95%", label: "Satisfaction Rate", color: "text-chart-4", bgColor: "bg-chart-4/20" },
+];
 
-const allAmenities = [...new Set(flats.flatMap((f) => f.amenities))];
-const allLocations = [...new Set(flats.map((f) => f.location))];
-
-export default function FlatsPage() {
-  const [filters, setFilters] = useState({
-    search: '',
-    location: 'all',
-    price: [1200],
-    amenities: [] as string[],
-    safety: 0,
-  });
-
-  const handleFilterChange = (key: keyof typeof filters, value: any) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-  
-  const handleAmenityChange = (amenity: string) => {
-    setFilters(prev => {
-        const newAmenities = prev.amenities.includes(amenity)
-            ? prev.amenities.filter(a => a !== amenity)
-            : [...prev.amenities, amenity];
-        return {...prev, amenities: newAmenities};
-    });
-  };
-
-  const filteredFlats = useMemo(() => {
-    return flats.filter((flat) => {
-      if (filters.search && !flat.name.toLowerCase().includes(filters.search.toLowerCase())) {
-        return false;
-      }
-      if (filters.location !== 'all' && flat.location !== filters.location) {
-        return false;
-      }
-      if (flat.price > filters.price[0]) {
-        return false;
-      }
-      if (filters.amenities.length > 0 && !filters.amenities.every((a) => flat.amenities.includes(a))) {
-        return false;
-      }
-      if (flat.safetyRating < filters.safety) {
-        return false;
-      }
-      return true;
-    });
-  }, [filters]);
-
+export default function LandingPage() {
   return (
-    <div className="container mx-auto py-8 px-4 md:px-6">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <aside className="lg:col-span-1">
-          <Card className="sticky top-24">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold flex items-center gap-2 mb-6">
-                <Filter className="w-5 h-5" />
-                Filters
-              </h2>
-              <div className="space-y-6">
-                <div>
-                  <Label htmlFor="search">Search by name</Label>
-                  <Input
-                    id="search"
-                    placeholder="e.g., Sunny Campus..."
-                    value={filters.search}
-                    onChange={(e) => handleFilterChange('search', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="location">Location</Label>
-                  <Select
-                    value={filters.location}
-                    onValueChange={(value) => handleFilterChange('location', value)}
-                  >
-                    <SelectTrigger id="location">
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Locations</SelectItem>
-                      {allLocations.map((loc) => (
-                        <SelectItem key={loc} value={loc}>
-                          {loc}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="price">Max Price: ${filters.price[0]}</Label>
-                  <Slider
-                    id="price"
-                    min={500}
-                    max={1200}
-                    step={50}
-                    value={filters.price}
-                    onValueChange={(value) => handleFilterChange('price', value)}
-                  />
-                </div>
-                <div>
-                  <Label>Amenities</Label>
-                  <div className="space-y-2 mt-2">
-                    {allAmenities.map((amenity) => (
-                      <div key={amenity} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={amenity}
-                          checked={filters.amenities.includes(amenity)}
-                          onCheckedChange={() => handleAmenityChange(amenity)}
-                        />
-                        <label
-                          htmlFor={amenity}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {amenity}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="safety">Min Safety Rating: {filters.safety}</Label>
-                   <Slider
-                    id="safety"
-                    min={0}
-                    max={5}
-                    step={0.5}
-                    defaultValue={[filters.safety]}
-                    onValueChange={(value) => handleFilterChange('safety', value[0])}
-                  />
-                </div>
+    <>
+      <div className="relative">
+        <section className="bg-gradient-to-br from-purple-900 to-indigo-950 text-white pt-36 pb-24">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+              Safe, Verified Housing for<br />Women Students
+            </h1>
+            <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">
+              Discover trusted accommodation with real reviews from female students, for female students.
+            </p>
+            <p className="mt-2 text-lg text-white/80">Your safety and comfort are our top priorities</p>
+            
+            <div className="mt-10 max-w-2xl mx-auto">
+              <div className="relative">
+                <Input
+                  type="search"
+                  placeholder="Search by location, area, or property name..."
+                  className="w-full h-16 pl-6 pr-16 rounded-full bg-white text-card-foreground placeholder:text-muted-foreground border-transparent focus:ring-2 focus:ring-primary"
+                />
+                <Button type="submit" size="icon" className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full h-12 w-12">
+                  <Search className="h-6 w-6" />
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-        </aside>
-        <main className="lg:col-span-3">
-          <h1 className="text-3xl font-bold mb-6">Find Your Safe Stay</h1>
-          {filteredFlats.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredFlats.map((flat) => (
-                <FlatCard key={flat.id} flat={flat} />
-              ))}
             </div>
-          ) : (
-             <div className="flex flex-col items-center justify-center text-center h-full min-h-[40vh] bg-card rounded-lg p-8">
-                <p className="text-lg font-medium">No flats match your criteria.</p>
-                <p className="text-muted-foreground mt-2">Try adjusting your filters to find more options.</p>
+
+            <div className="mt-8 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm text-white/80">
+                <span className="flex items-center"><span className="w-2 h-2 rounded-full bg-primary mr-2"></span>Verified Properties</span>
+                <span className="flex items-center"><span className="w-2 h-2 rounded-full bg-primary mr-2"></span>Real Student Reviews</span>
+                <span className="flex items-center"><span className="w-2 h-2 rounded-full bg-primary mr-2"></span>24/7 Support</span>
             </div>
-          )}
-        </main>
+          </div>
+        </section>
       </div>
-    </div>
+
+      <section className="py-24 bg-secondary">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <Card key={index} className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-2xl border-0 bg-card">
+                <CardContent className="flex flex-col items-center justify-center gap-4 p-0">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${stat.bgColor}`}>
+                    <stat.icon className={`w-8 h-8 ${stat.color}`} />
+                  </div>
+                  <p className="text-4xl font-bold text-card-foreground">{stat.value}</p>
+                  <p className="text-muted-foreground">{stat.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
