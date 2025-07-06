@@ -12,7 +12,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { Roommate, RoommateSchema } from '@/lib/data';
 
-export const MatchRoommatesInputSchema = z.object({
+const MatchRoommatesInputSchema = z.object({
   seekerProfile: RoommateSchema.describe('The profile of the student looking for a roommate.'),
   candidates: z.array(RoommateSchema).describe('A list of potential roommate candidates.'),
 });
@@ -24,7 +24,7 @@ const RecommendedRoommateSchema = RoommateSchema.extend({
 });
 export type RecommendedRoommate = z.infer<typeof RecommendedRoommateSchema>;
 
-export const MatchRoommatesOutputSchema = z.object({
+const MatchRoommatesOutputSchema = z.object({
   recommendations: z.array(RecommendedRoommateSchema).describe('A ranked list of recommended roommates, sorted from best to worst match.'),
 });
 export type MatchRoommatesOutput = z.infer<typeof MatchRoommatesOutputSchema>;
