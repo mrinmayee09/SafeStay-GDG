@@ -12,8 +12,12 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { Roommate, RoommateSchema } from '@/lib/data';
 
+const SeekerProfileSchema = RoommateSchema.omit({ id: true, photo: true }).describe(
+  'The profile of the student looking for a roommate, provided via a form.'
+);
+
 const MatchRoommatesInputSchema = z.object({
-  seekerProfile: RoommateSchema.describe('The profile of the student looking for a roommate.'),
+  seekerProfile: SeekerProfileSchema,
   candidates: z.array(RoommateSchema).describe('A list of potential roommate candidates.'),
 });
 export type MatchRoommatesInput = z.infer<typeof MatchRoommatesInputSchema>;
