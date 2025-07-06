@@ -2,14 +2,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { type Roommate } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from './ui/badge';
-import { GraduationCap, CalendarDays, MessageSquare } from 'lucide-react';
+import { GraduationCap, CalendarDays, MessageSquare, Star, Sparkles, UserCheck2 } from 'lucide-react';
 import { Button } from './ui/button';
+import { Progress } from './ui/progress';
 
 type RoommateCardProps = {
   roommate: Roommate;
+  matchScore?: number;
+  compatibilityReason?: string;
 };
 
-export function RoommateCard({ roommate }: RoommateCardProps) {
+export function RoommateCard({ roommate, matchScore, compatibilityReason }: RoommateCardProps) {
   return (
     <Card className="h-full transition-transform duration-300 hover:scale-105 hover:shadow-xl flex flex-col">
       <CardContent className="p-6 flex flex-col items-center text-center flex-grow">
@@ -36,6 +39,18 @@ export function RoommateCard({ roommate }: RoommateCardProps) {
             ))}
         </div>
         
+        {matchScore !== undefined && compatibilityReason && (
+            <div className="w-full mt-4 bg-accent p-3 rounded-lg text-left">
+                <div className='flex items-center justify-between mb-2'>
+                    <h4 className="font-semibold text-sm flex items-center gap-1.5"><UserCheck2 className="w-4 h-4 text-accent-foreground" /> Compatibility</h4>
+                    <span className="font-bold text-lg text-primary">{matchScore}%</span>
+                </div>
+                <Progress value={matchScore} className="h-2 mb-2" />
+                <p className="text-xs text-muted-foreground italic">"{compatibilityReason}"</p>
+            </div>
+        )}
+
+
         <div className="mt-auto pt-5 w-full">
             <Button className="w-full">
                 <MessageSquare className="mr-2 h-4 w-4" />

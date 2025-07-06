@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type Review = {
   id: number;
   author: string;
@@ -27,15 +29,20 @@ export type Flat = {
   landlord: Landlord;
 };
 
-export type Roommate = {
-  id: number;
-  name: string;
-  age: number;
-  year: string;
-  branch: 'CST' | 'IT' | 'CE' | 'DS' | 'ENC' | 'AI';
-  hobbies: string[];
-  photo: string;
-};
+export const RoommateSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  age: z.number(),
+  year: z.string(),
+  branch: z.enum(['CST', 'IT', 'CE', 'DS', 'ENC', 'AI']),
+  hobbies: z.array(z.string()),
+  photo: z.string(),
+  personality: z.string().describe("Describes their general nature, e.g., 'Early Bird, Studious' or 'Night Owl, Creative'."),
+  socialHabits: z.string().describe("Describes their social preferences, e.g., 'Prefers quiet nights in' or 'Enjoys hosting friends'."),
+});
+
+export type Roommate = z.infer<typeof RoommateSchema>;
+
 
 export const reviews: Review[] = [
   { id: 1, author: 'Priya K.', rating: 5, comment: 'Super safe area, well-lit streets. Landlord is very respectful and responsive! Felt very secure, especially coming home late from college.', isVerified: true },
@@ -168,6 +175,8 @@ export const roommates: Roommate[] = [
     branch: 'CST',
     hobbies: ['Reading', 'Debating', 'Gaming'],
     photo: 'https://placehold.co/100x100.png',
+    personality: 'Night Owl, Focused',
+    socialHabits: 'Prefers quiet nights in, but open to occasional outings.',
   },
   {
     id: 2,
@@ -177,6 +186,8 @@ export const roommates: Roommate[] = [
     branch: 'IT',
     hobbies: ['Painting', 'Yoga', 'Binge-watching'],
     photo: 'https://placehold.co/100x100.png',
+    personality: 'Early Bird, Creative',
+    socialHabits: 'Enjoys small groups and cafe hopping.',
   },
   {
     id: 3,
@@ -186,6 +197,8 @@ export const roommates: Roommate[] = [
     branch: 'CE',
     hobbies: ['Cooking', 'Running', 'Movies'],
     photo: 'https://placehold.co/100x100.png',
+    personality: 'Early Bird, Organized',
+    socialHabits: 'Loves hosting study groups and weekend dinners.',
   },
   {
     id: 4,
@@ -195,6 +208,8 @@ export const roommates: Roommate[] = [
     branch: 'DS',
     hobbies: ['Baking', 'Concerts', 'Coding'],
     photo: 'https://placehold.co/100x100.png',
+    personality: 'Night Owl, Social',
+    socialHabits: 'Loves going out and exploring the city on weekends.',
   },
   {
     id: 5,
@@ -204,6 +219,8 @@ export const roommates: Roommate[] = [
     branch: 'AI',
     hobbies: ['Thrifting', 'Coffee shops', 'Reading'],
     photo: 'https://placehold.co/100x100.png',
+    personality: 'Flexible schedule, Introverted',
+    socialHabits: 'Prefers one-on-one conversations and quiet activities.',
   },
   {
     id: 6,
@@ -213,5 +230,7 @@ export const roommates: Roommate[] = [
     branch: 'ENC',
     hobbies: ['Gardening', 'Volunteering', 'Music'],
     photo: 'https://placehold.co/100x100.png',
+    personality: 'Early Bird, Community-minded',
+    socialHabits: 'Often busy with extracurriculars, enjoys a calm home.',
   },
 ];
