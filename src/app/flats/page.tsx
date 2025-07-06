@@ -31,10 +31,10 @@ export default function FlatsPage() {
                   <SelectValue placeholder="Any Budget" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="<10000">Under ₹10,000</SelectItem>
-                  <SelectItem value="10000-15000">₹10,000 - ₹15,000</SelectItem>
-                  <SelectItem value="15000-20000">₹15,000 - ₹20,000</SelectItem>
-                  <SelectItem value=">20000">Over ₹20,000</SelectItem>
+                  <SelectItem value="<15000">Under ₹15,000</SelectItem>
+                  <SelectItem value="15000-25000">₹15,000 - ₹25,000</SelectItem>
+                  <SelectItem value="25000-40000">₹25,000 - ₹40,000</SelectItem>
+                  <SelectItem value=">40000">Over ₹40,000</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -45,9 +45,11 @@ export default function FlatsPage() {
                   <SelectValue placeholder="Any Location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="gurgaon">Gurgaon</SelectItem>
-                  <SelectItem value="downtown">Downtown</SelectItem>
-                  <SelectItem value="uni-district">University District</SelectItem>
+                  <SelectItem value="bandra">Bandra</SelectItem>
+                  <SelectItem value="andheri">Andheri</SelectItem>
+                  <SelectItem value="juhu">Juhu</SelectItem>
+                  <SelectItem value="powai">Powai</SelectItem>
+                  <SelectItem value="vile-parle">Vile Parle</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -58,9 +60,10 @@ export default function FlatsPage() {
                   <SelectValue placeholder="Any Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="apartment">Apartment</SelectItem>
-                  <SelectItem value="studio">Studio</SelectItem>
-                  <SelectItem value="house">House</SelectItem>
+                  <SelectItem value="1rk">1RK</SelectItem>
+                  <SelectItem value="1bhk">1BHK</SelectItem>
+                  <SelectItem value="2bhk">2BHK</SelectItem>
+                  <SelectItem value="pg">Paying Guest</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { flats } from '@/lib/data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StarRating } from '@/components/star-rating';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Shield, User, MessageSquare, Verified, AlertTriangle, Building, DollarSign, Tag, CheckSquare } from 'lucide-react';
+import { Shield, User, Verified, AlertTriangle, Building, DollarSign, Tag, CheckCircle2, ChevronLeft, MapPin, Wifi, ParkingSquare, ShoppingBasket } from 'lucide-react';
 import { ReviewSummary } from './review-summary';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -28,9 +29,14 @@ export default function FlatDetailPage({ params }: PageProps) {
   }
 
   const allReviews = flat.landlord.reviews;
+  const totalReviews = flat.landlord.reviews.length;
 
   return (
     <div className="container mx-auto py-8 px-4 md:px-6">
+       <Link href="/flats" className="inline-flex items-center gap-2 text-primary hover:underline mb-6 font-medium">
+        <ChevronLeft className="w-4 h-4" />
+        Back to Listings
+      </Link>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           {/* Image Carousel */}
@@ -48,73 +54,110 @@ export default function FlatDetailPage({ params }: PageProps) {
             <CarouselNext className="right-4" />
           </Carousel>
 
-          {/* About Section */}
           <Card>
             <CardHeader>
               <CardTitle className="text-3xl font-bold">{flat.name}</CardTitle>
-              <p className="text-muted-foreground">{flat.location}</p>
+               <div className="flex flex-col sm:flex-row sm:items-center gap-x-4 gap-y-2 text-muted-foreground mt-2">
+                  <p className="text-xl font-semibold text-primary">₹{flat.price.toLocaleString()}/month</p>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4"/>
+                    <span>{flat.location}</span>
+                  </div>
+              </div>
+              <div className="flex items-center gap-4 pt-2">
+                <Badge className="bg-green-100 text-green-800 border-green-200 hover:bg-green-100/80 text-sm">
+                    <Shield className="w-4 h-4 mr-1.5" />
+                    Safety: {flat.safetyRating}/5
+                </Badge>
+                <div className="flex items-center gap-2">
+                    <StarRating rating={flat.landlord.rating} size={18} />
+                    <span className="text-muted-foreground text-sm">({totalReviews} reviews)</span>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-4 text-sm mb-6">
-                  <div className="flex items-center gap-2"><DollarSign className="w-4 h-4 text-primary" /> <strong>${flat.price}</strong>/month</div>
-                  <div className="flex items-center gap-2"><Building className="w-4 h-4 text-primary" /> {flat.type}</div>
-                  <div className="flex items-center gap-2"><Shield className="w-4 h-4 text-primary" /> Safety Rating: <StarRating rating={flat.safetyRating} size={16} /></div>
-              </div>
-              <p className="text-foreground/80 leading-relaxed">
-                A charming and secure {flat.type.toLowerCase()} located in the heart of {flat.location}. Perfect for students seeking a safe and comfortable living space close to campus facilities. Enjoy modern amenities and a responsive landlord.
-              </p>
+                <Separator className="my-4" />
+                
+                {/* Highlights */}
+                <div>
+                    <h3 className="text-xl font-bold mb-4">Highlights</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                        {flat.highlights.map(highlight => (
+                            <div key={highlight} className="flex items-center gap-2">
+                                <CheckCircle2 className="w-5 h-5 text-primary" />
+                                <span className="text-foreground/90">{highlight}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <Separator className="my-4" />
+
+                {/* Description */}
+                 <div>
+                    <h3 className="text-xl font-bold mb-4">Description</h3>
+                     <p className="text-foreground/80 leading-relaxed">
+                        A charming and secure {flat.type.toLowerCase()} located in the heart of {flat.location}. Perfect for students seeking a safe and comfortable living space close to campus facilities. Enjoy modern amenities and a responsive landlord in a student-friendly neighborhood.
+                    </p>
+                </div>
+                
+                <Separator className="my-4" />
+
+                {/* Amenities */}
+                 <div>
+                    <h3 className="text-xl font-bold mb-4">Amenities</h3>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                        {flat.amenities.map(amenity => (
+                            <div key={amenity} className="flex items-center gap-2">
+                               <Badge variant="secondary" className="w-2 h-2 p-0 rounded-full bg-primary" />
+                                <span className="text-foreground/90">{amenity}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
             </CardContent>
           </Card>
           
           {/* Reviews Section */}
-          <div className="mt-8">
+          <div className="mt-12">
              <h2 className="text-2xl font-bold mb-4">Reviews & Insights</h2>
             <ReviewSummary reviews={allReviews} />
             <div className="space-y-6 mt-6">
               {allReviews.map((review) => (
-                <Card key={review.id}>
-                  <CardContent className="p-6">
+                <div key={review.id} className="border-b pb-6">
                     <div className="flex items-start justify-between">
                         <div>
                             <p className="font-semibold flex items-center gap-2">
                                 {review.author}
-                                {review.isVerified && <Verified className="w-4 h-4 text-blue-500" />}
+                                {review.isVerified && <Verified className="w-4 h-4 text-blue-500" title="Verified Reviewer"/>}
                             </p>
-                            <StarRating rating={review.rating} size={16} className="mt-1" />
+                            <p className="text-sm text-muted-foreground mt-1">{new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                         </div>
-                        <Badge variant="outline">{new Date().toLocaleDateString()}</Badge>
+                         <div className="flex items-center gap-2">
+                            <span className="font-bold">{review.rating}</span>
+                            <StarRating rating={review.rating} size={16} />
+                        </div>
                     </div>
-                    <p className="text-muted-foreground mt-4">{review.comment}</p>
-                  </CardContent>
-                </Card>
+                    <p className="text-muted-foreground mt-3">{review.comment}</p>
+                </div>
               ))}
             </div>
           </div>
         </div>
 
         <div className="lg:col-span-1 space-y-8">
-          {/* Amenities Card */}
-          <Card className="sticky top-24">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2"><CheckSquare className="w-6 h-6 text-primary" /> Amenities</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-muted-foreground">
-                {flat.amenities.map(amenity => <li key={amenity} className="flex items-center gap-3"><Badge variant="secondary" className="w-2 h-2 p-0 rounded-full bg-primary" /><span>{amenity}</span></li>)}
-              </ul>
-            </CardContent>
-          </Card>
-          
           {/* Landlord Card */}
-          <Card>
+          <Card className="sticky top-24">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><User className="w-6 h-6 text-primary" /> Landlord Info</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="font-semibold text-lg">{flat.landlord.name}</p>
               <div className="flex items-center gap-2 mt-2">
-                <span className="text-muted-foreground">Rating:</span>
+                <span className="text-muted-foreground">Overall Rating:</span>
                 <StarRating rating={flat.landlord.rating} size={16} />
+                 <span className="text-sm text-muted-foreground">({totalReviews})</span>
               </div>
             </CardContent>
           </Card>
@@ -137,7 +180,7 @@ export default function FlatDetailPage({ params }: PageProps) {
                                 Your report is anonymous and helps us maintain a safe environment for all students.
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="grid gap-4 py-4">
+                        <form className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="issue-type" className="text-right">Issue Type</Label>
                                 <Input id="issue-type" placeholder="e.g., Unsafe entry, Harassment" className="col-span-3" />
@@ -146,8 +189,8 @@ export default function FlatDetailPage({ params }: PageProps) {
                                 <Label htmlFor="description" className="text-right">Description</Label>
                                 <Textarea id="description" placeholder="Please describe the incident in detail." className="col-span-3" />
                             </div>
-                        </div>
-                         <Button type="submit">Submit Report</Button>
+                             <Button type="submit">Submit Report</Button>
+                        </form>
                     </DialogContent>
                 </Dialog>
             </CardContent>
