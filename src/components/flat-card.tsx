@@ -4,45 +4,91 @@ import { Card, CardContent } from '@/components/ui/card';
 import { type Flat } from '@/lib/data';
 import { StarRating } from './star-rating';
 import { Badge } from './ui/badge';
-import { MapPin } from 'lucide-react';
+import { Button } from './ui/button';
+import { Separator } from './ui/separator';
+import { MapPin, ShieldCheck, Sparkles, Star } from 'lucide-react';
 
 type FlatCardProps = {
   flat: Flat;
 };
 
 export function FlatCard({ flat }: FlatCardProps) {
+  const latestReview = flat.landlord.reviews[0];
+
   return (
-    <Link href={`/flats/${flat.id}`} className="group block">
-      <Card className="overflow-hidden h-full transition-shadow duration-300 hover:shadow-xl">
-        <div className="relative aspect-[4/3] overflow-hidden">
-          <Image
-            src={flat.images[0]}
-            alt={`Image of ${flat.name}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            data-ai-hint="apartment exterior"
-          />
-        </div>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <h3 className="font-semibold text-lg leading-tight truncate pr-2">
-              {flat.name}
-            </h3>
-            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 whitespace-nowrap">
-              ${flat.price}/mo
+    <Card className="overflow-hidden h-full transition-shadow duration-300 hover:shadow-xl rounded-2xl flex flex-col">
+      <div className="relative aspect-[4/3] overflow-hidden group">
+        <Image
+          src={flat.images[0]}
+          alt={`Image of ${flat.name}`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          data-ai-hint="apartment interior"
+        />
+        <div className="absolute top-3 left-3 flex flex-col gap-2">
+            {flat.isFeatured && (
+                <Badge className="bg-primary/80 backdrop-blur-sm border-0 text-primary-foreground">
+                    <Sparkles className="w-3 h-3 mr-1.5" />
+                    Featured
+                </Badge>
+            )}
+             <Badge variant="secondary" className="bg-green-100/80 backdrop-blur-sm border-green-300 text-green-800">
+                <ShieldCheck className="w-3 h-3 mr-1.5" />
+                Safety: {flat.safetyRating}
             </Badge>
+        </div>
+      </div>
+      <CardContent className="p-4 flex flex-col flex-grow">
+        <div className="flex justify-between items-start gap-2">
+          <h3 className="font-bold text-lg leading-tight">
+            {flat.name}
+          </h3>
+          <span className="font-bold text-lg text-primary whitespace-nowrap">
+            ₹{flat.price.toLocaleString()}/mo
+          </span>
+        </div>
+        <p className="text-muted-foreground text-sm mt-1 flex items-center gap-1.5">
+          <MapPin className="w-4 h-4" />
+          {flat.location}
+        </p>
+
+        <div className="flex justify-between items-center mt-3">
+          <div className="flex items-center gap-2 text-sm">
+            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+            <span className="font-medium">{flat.landlord.rating}</span>
+            <span className="text-muted-foreground">({flat.landlord.reviews.length} reviews)</span>
           </div>
-          <p className="text-muted-foreground text-sm mt-1 flex items-center gap-1.5">
-            <MapPin className="w-4 h-4" />
-            {flat.location}
-          </p>
-          <div className="flex justify-between items-center mt-3">
-            <StarRating rating={flat.safetyRating} size={18} />
-            <span className="text-xs text-muted-foreground">{flat.type}</span>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+          <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50">Verified Student</Badge>
+        </div>
+        
+        <div className="flex flex-wrap gap-2 mt-4">
+            {flat.tags.slice(0, 3).map(tag => (
+                <Badge key={tag} variant="secondary">{tag}</Badge>
+            ))}
+        </div>
+
+        {latestReview && (
+          <>
+            <Separator className="my-4" />
+            <div>
+                <p className="text-xs font-semibold text-muted-foreground mb-1">LATEST REVIEW:</p>
+                <div className="flex items-start justify-between">
+                    <p className="font-semibold text-sm">{latestReview.author}</p>
+                    <StarRating rating={latestReview.rating} size={14} />
+                </div>
+                <p className="text-sm text-muted-foreground italic mt-1 line-clamp-2">"{latestReview.comment}"</p>
+            </div>
+          </>
+        )}
+
+        <div className="mt-auto pt-4 grid grid-cols-2 gap-3">
+            <Button className="w-full">Contact</Button>
+            <Button variant="outline" className="w-full" asChild>
+                <Link href={`/flats/${flat.id}`}>Details</Link>
+            </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
