@@ -8,18 +8,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Users, Filter } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const allMajors = [...new Set(roommates.map((r) => r.major))];
+const allBranches = [...new Set(roommates.map((r) => r.branch))];
 const allHobbies = [...new Set(roommates.flatMap((r) => r.hobbies))];
+const allYears = [...new Set(roommates.map((r) => r.year))];
 
 export default function RoommatesPage() {
   const [filters, setFilters] = useState({
     search: '',
-    majors: [] as string[],
+    branches: [] as string[],
     hobbies: [] as string[],
+    year: '',
   });
 
-  const handleFilterChange = (key: 'majors' | 'hobbies', value: string) => {
+  const handleCheckboxChange = (key: 'branches' | 'hobbies', value: string) => {
     setFilters(prev => {
         const newValues = prev[key].includes(value)
             ? prev[key].filter(v => v !== value)
@@ -33,10 +36,13 @@ export default function RoommatesPage() {
       if (filters.search && !roommate.name.toLowerCase().includes(filters.search.toLowerCase())) {
         return false;
       }
-      if (filters.majors.length > 0 && !filters.majors.includes(roommate.major)) {
+       if (filters.year && roommate.year !== filters.year) {
         return false;
       }
-      if (filters.hobbies.length > 0 && !filters.hobbies.every((h) => roommate.hobbies.includes(h))) {
+      if (filters.branches.length > 0 && !filters.branches.includes(roommate.branch)) {
+        return false;
+      }
+      if (filters.hobbies.length > 0 && !filters.hobbies.some((h) => roommate.hobbies.includes(h))) {
         return false;
       }
       return true;
@@ -63,21 +69,37 @@ export default function RoommatesPage() {
                     onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
                   />
                 </div>
+
                 <div>
-                  <Label>Major</Label>
+                  <Label htmlFor="year">Year of Study</Label>
+                  <Select value={filters.year} onValueChange={(value) => setFilters(prev => ({...prev, year: value}))}>
+                    <SelectTrigger id="year">
+                      <SelectValue placeholder="Any Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Any Year</SelectItem>
+                      {allYears.map((year) => (
+                        <SelectItem key={year} value={year}>{year}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label>Branch</Label>
                   <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
-                    {allMajors.map((major) => (
-                      <div key={major} className="flex items-center space-x-2">
+                    {allBranches.map((branch) => (
+                      <div key={branch} className="flex items-center space-x-2">
                         <Checkbox
-                          id={`major-${major}`}
-                          checked={filters.majors.includes(major)}
-                          onCheckedChange={() => handleFilterChange('majors', major)}
+                          id={`branch-${branch}`}
+                          checked={filters.branches.includes(branch)}
+                          onCheckedChange={() => handleCheckboxChange('branches', branch)}
                         />
                         <label
-                          htmlFor={`major-${major}`}
+                          htmlFor={`branch-${branch}`}
                           className="text-sm font-medium leading-none"
                         >
-                          {major}
+                          {branch}
                         </label>
                       </div>
                     ))}
@@ -91,7 +113,7 @@ export default function RoommatesPage() {
                         <Checkbox
                           id={`hobby-${hobby}`}
                           checked={filters.hobbies.includes(hobby)}
-                          onCheckedChange={() => handleFilterChange('hobbies', hobby)}
+                          onCheckedChange={() => handleCheckboxChange('hobbies', hobby)}
                         />
                         <label
                           htmlFor={`hobby-${hobby}`}
@@ -111,13 +133,14 @@ export default function RoommatesPage() {
         <main className="lg:col-span-3">
           <h1 className="text-3xl font-bold mb-6">Roommate Discovery</h1>
            {filteredRoommates.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
               {filteredRoommates.map((roommate) => (
                 <RoommateCard key={roommate.id} roommate={roommate} />
               ))}
             </div>
            ) : (
              <div className="flex flex-col items-center justify-center text-center h-full min-h-[40vh] bg-card rounded-lg p-8">
+                <Users className="w-16 h-16 text-muted-foreground/50 mb-4"/>
                 <p className="text-lg font-medium">No roommates match your criteria.</p>
                 <p className="text-muted-foreground mt-2">Try adjusting your filters to find more options.</p>
             </div>
