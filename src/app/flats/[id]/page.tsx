@@ -9,11 +9,8 @@ import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Shield, User, Verified, AlertTriangle, Building, DollarSign, Tag, CheckCircle2, ChevronLeft, MapPin, Wifi, ParkingSquare, ShoppingBasket } from 'lucide-react';
 import { ReviewSummary } from './review-summary';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { ReportIncidentCard } from '@/components/report-incident-card';
+
 
 type PageProps = {
   params: {
@@ -163,38 +160,8 @@ export default function FlatDetailPage({ params }: PageProps) {
           </Card>
 
           {/* Report Incident */}
-          <Card className="bg-destructive/10 border-destructive/20">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-destructive"><AlertTriangle className="w-6 h-6" /> Safety Concern?</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p className="text-sm text-destructive/80 mb-4">Help keep our community safe. Report any issues or unsafe conditions anonymously.</p>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="destructive" className="w-full">Report an Incident</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Report an Incident</DialogTitle>
-                            <DialogDescription>
-                                Your report is anonymous and helps us maintain a safe environment for all students.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <form className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="issue-type" className="text-right">Issue Type</Label>
-                                <Input id="issue-type" placeholder="e.g., Unsafe entry, Harassment" className="col-span-3" />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="description" className="text-right">Description</Label>
-                                <Textarea id="description" placeholder="Please describe the incident in detail." className="col-span-3" />
-                            </div>
-                             <Button type="submit">Submit Report</Button>
-                        </form>
-                    </DialogContent>
-                </Dialog>
-            </CardContent>
-          </Card>
+          <ReportIncidentCard flatId={flat.id} />
+
         </div>
       </div>
     </div>
