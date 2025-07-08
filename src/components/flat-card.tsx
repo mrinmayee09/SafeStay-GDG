@@ -1,3 +1,7 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,7 +10,9 @@ import { StarRating } from './star-rating';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Separator } from './ui/separator';
-import { MapPin, ShieldCheck, Sparkles, Star } from 'lucide-react';
+import { MapPin, ShieldCheck, Sparkles, Star, Heart } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
 
 type FlatCardProps = {
   flat: Flat;
@@ -14,6 +20,34 @@ type FlatCardProps = {
 
 export function FlatCard({ flat }: FlatCardProps) {
   const latestReview = flat.landlord.reviews[0];
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    const savedFlats: number[] = JSON.parse(localStorage.getItem('savedFlats') || '[]');
+    setIsSaved(savedFlats.includes(flat.id));
+  }, [flat.id]);
+
+  const handleSaveToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let savedFlats: number[] = JSON.parse(localStorage.getItem('savedFlats') || '[]');
+    
+    const currentlySaved = savedFlats.includes(flat.id);
+
+    if (currentlySaved) {
+      savedFlats = savedFlats.filter((id) => id !== flat.id);
+      setIsSaved(false);
+    } else {
+      savedFlats.push(flat.id);
+      setIsSaved(true);
+    }
+
+    localStorage.setItem('savedFlats', JSON.stringify(savedFlats));
+    
+    // Dispatch a custom event to notify other components (like the /saved page)
+    window.dispatchEvent(new Event('storage'));
+  };
 
   return (
     <Card className="overflow-hidden h-full transition-shadow duration-300 hover:shadow-xl rounded-2xl flex flex-col">
@@ -37,6 +71,17 @@ export function FlatCard({ flat }: FlatCardProps) {
                 <ShieldCheck className="w-3 h-3 mr-1.5" />
                 Safety: {flat.safetyRating}
             </Badge>
+        </div>
+         <div className="absolute top-3 right-3 z-10">
+          <Button
+            onClick={handleSaveToggle}
+            size="icon"
+            variant="ghost"
+            className="rounded-full h-10 w-10 bg-black/20 backdrop-blur-sm text-white hover:bg-black/40"
+          >
+            <Heart className={cn("w-5 h-5 transition-all", isSaved ? 'fill-red-500 text-red-500' : 'text-white')} />
+            <span className="sr-only">Save</span>
+          </Button>
         </div>
       </div>
       <CardContent className="p-4 flex flex-col flex-grow">

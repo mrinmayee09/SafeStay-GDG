@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -11,7 +12,7 @@ const navLinks = [
   { href: "/flats", label: "Browse Listings", icon: Search },
   { href: "/post-listing", label: "Post Listing", icon: PlusSquare },
   { href: "/roommates", label: "Find Roommates", icon: Users },
-  { href: "#", label: "Saved", icon: Bookmark },
+  { href: "/saved", label: "Saved", icon: Bookmark },
 ];
 
 export function Header() {
@@ -26,17 +27,20 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isTransparent = pathname === '/' && !isScrolled;
+
   return (
     <header className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
-        isScrolled ? "bg-background/95 backdrop-blur-sm border-b" : "bg-transparent border-b border-transparent"
+        isScrolled ? "bg-background/95 backdrop-blur-sm border-b" : 
+        (pathname === '/' ? "bg-[#2a0d45]" : "bg-background border-b")
     )}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <div className="flex items-center gap-12">
           <Link href="/" className="flex items-center space-x-2">
             <span className={cn(
               "font-bold text-2xl transition-colors",
-              (pathname === '/' && !isScrolled) ? "text-white" : "text-primary"
+              isTransparent ? "text-white" : "text-primary"
             )}>SafeStay</span>
           </Link>
           <nav className="hidden md:flex items-center">
@@ -47,7 +51,7 @@ export function Header() {
                 className={cn(
                   "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary px-4 py-2 rounded-lg",
                    pathname.startsWith(link.href) ? "text-primary bg-primary/10" :
-                   (pathname === '/' && !isScrolled) ? "text-purple-200 hover:text-white" : "text-muted-foreground"
+                   isTransparent ? "text-purple-200 hover:text-white" : "text-muted-foreground"
                 )}
               >
                 <link.icon className="w-4 h-4" />
@@ -58,9 +62,9 @@ export function Header() {
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="ghost" asChild>
-            <Link href="#" className={cn((pathname === '/' && !isScrolled) && "text-white hover:text-white hover:bg-white/10")}>Sign In</Link>
+            <Link href="#" className={cn(isTransparent && "text-white hover:text-white hover:bg-white/10")}>Sign In</Link>
           </Button>
-          <Button asChild className="bg-white text-primary hover:bg-purple-100">
+          <Button asChild className={cn(isTransparent ? 'bg-white text-primary hover:bg-purple-100' : 'bg-primary text-primary-foreground hover:bg-primary/90')}>
             <Link href="#">Sign Up</Link>
           </Button>
         </div>
