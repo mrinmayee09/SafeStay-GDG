@@ -5,8 +5,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Search, Users, PlusSquare, Bookmark } from "lucide-react";
+import { Search, Users, PlusSquare, Bookmark, LogOut, ChevronDown } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, signOut, type User } from "firebase/auth";
+import { SignInDialog } from "./sign-in-dialog";
+import { SignUpDialog } from "./sign-up-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 const navLinks = [
   { href: "/flats", label: "Browse Listings", icon: Search },
@@ -18,14 +29,33 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    return () => {
+        window.removeEventListener("scroll", handleScroll);
+        unsubscribe();
+    };
   }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
 
   const isTransparent = pathname === '/' && !isScrolled;
 
@@ -61,12 +91,34 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" asChild>
-            <Link href="#" className={cn(isTransparent && "text-white hover:text-white hover:bg-white/10")}>Sign In</Link>
-          </Button>
-          <Button asChild className={cn(isTransparent ? 'bg-white text-primary hover:bg-purple-100' : 'bg-primary text-primary-foreground hover:bg-primary/90')}>
-            <Link href="#">Sign Up</Link>
-          </Button>
+            {user ? (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                         <Button variant="ghost" className={cn("flex items-center gap-2", isTransparent && "text-white hover:text-white hover:bg-white/10")}>
+                            {user.email}
+                            <ChevronDown className="w-4 h-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={handleSignOut}>
+                             <LogOut className="mr-2 h-4 w-4" />
+                             Sign Out
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ) : (
+                <>
+                    <SignInDialog open={isSignInOpen} onOpenChange={setIsSignInOpen} />
+                    <SignUpDialog open={isSignUpOpen} onOpenChange={setIsSignUpOpen} />
+
+                    <Button variant="ghost" onClick={() => setIsSignInOpen(true)} className={cn(isTransparent && "text-white hover:text-white hover:bg-white/10")}>
+                        Sign In
+                    </Button>
+                    <Button onClick={() => setIsSignUpOpen(true)} className={cn(isTransparent ? 'bg-white text-primary hover:bg-purple-100' : 'bg-primary text-primary-foreground hover:bg-primary/90')}>
+                        Sign Up
+                    </Button>
+                </>
+            )}
         </div>
       </div>
     </header>
