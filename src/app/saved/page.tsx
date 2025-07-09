@@ -46,6 +46,10 @@ export default function SavedPage() {
             setSavedFlats([]);
         }
         setIsLoading(false);
+    }, (error) => {
+      console.error("Error fetching saved flats:", error);
+      setIsLoading(false);
+      setSavedFlats([]);
     });
 
     return () => unsubscribeFirestore();

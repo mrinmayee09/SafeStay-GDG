@@ -50,6 +50,9 @@ export function FlatCard({ flat }: FlatCardProps) {
         } else {
             setIsSaved(false);
         }
+    }, (error) => {
+      console.error(`Error listening to saved status for flat ${flat.id}:`, error);
+      setIsSaved(false);
     });
 
     return () => unsubscribe();

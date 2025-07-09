@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -10,7 +11,20 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { Roommate, RoommateSchema } from '@/lib/data';
+
+// Note: Re-defining schema here instead of importing from lib/data.ts
+// because 'use server' files can't import from client components or files that are used by them.
+const RoommateSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  age: z.number(),
+  year: z.string(),
+  branch: z.enum(['CST', 'IT', 'CE', 'DS', 'ENC', 'AI']),
+  hobbies: z.array(z.string()),
+  photo: z.string(),
+  personality: z.string().describe("Describes their general nature, e.g., 'Early Bird, Studious' or 'Night Owl, Creative'."),
+  socialHabits: z.string().describe("Describes their social preferences, e.g., 'Prefers quiet nights in' or 'Enjoys hosting friends'."),
+});
 
 const SeekerProfileSchema = RoommateSchema.omit({ id: true, photo: true }).describe(
   'The profile of the student looking for a roommate, provided via a form.'
