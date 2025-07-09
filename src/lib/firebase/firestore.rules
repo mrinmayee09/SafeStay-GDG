@@ -1,0 +1,28 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Allow anyone to read from the 'flats' collection (if we were storing them in Firestore)
+    match /flats/{flatId} {
+      allow read: if true;
+    }
+
+    // Secure the 'reports' collection
+    match /reports/{reportId} {
+      // Allow anyone to create (submit) a report
+      allow create: if true;
+      // Only authenticated users (admins in a real app) should be able to read/write reports
+      allow read, update, delete: if request.auth != null; 
+    }
+
+    // Secure the 'users' collection for saved flats
+    match /users/{userId} {
+      // A user can create their own document, and can read or write to it only if their UID matches the document ID.
+      // This allows a user to save their first flat (creating the document) and subsequent ones.
+      allow read, update, delete: if request.auth.uid == userId;
+      allow create: if request.auth.uid == userId;
+    }
+  }
+}
