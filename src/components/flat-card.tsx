@@ -12,6 +12,11 @@ import { Button } from './ui/button';
 import { Separator } from './ui/separator';
 import { MapPin, ShieldCheck, Sparkles, Star, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { auth, db } from '@/lib/firebase';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { doc, getDoc, updateDoc, setDoc, arrayUnion, arrayRemove, onSnapshot } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
+import { SignInDialog } from './sign-in-dialog';
 
 
 type FlatCardProps = {
@@ -21,35 +26,70 @@ type FlatCardProps = {
 export function FlatCard({ flat }: FlatCardProps) {
   const latestReview = flat.landlord.reviews[0];
   const [isSaved, setIsSaved] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const savedFlats: number[] = JSON.parse(localStorage.getItem('savedFlats') || '[]');
-    setIsSaved(savedFlats.includes(flat.id));
-  }, [flat.id]);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
-  const handleSaveToggle = (e: React.MouseEvent) => {
+  useEffect(() => {
+    if (!user) {
+      setIsSaved(false);
+      return;
+    }
+    const userDocRef = doc(db, 'users', user.uid);
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+            const savedFlats = docSnap.data().savedFlats || [];
+            setIsSaved(savedFlats.includes(flat.id));
+        } else {
+            setIsSaved(false);
+        }
+    });
+
+    return () => unsubscribe();
+  }, [user, flat.id]);
+
+  const handleSaveToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    let savedFlats: number[] = JSON.parse(localStorage.getItem('savedFlats') || '[]');
-    
-    const currentlySaved = savedFlats.includes(flat.id);
-
-    if (currentlySaved) {
-      savedFlats = savedFlats.filter((id) => id !== flat.id);
-      setIsSaved(false);
-    } else {
-      savedFlats.push(flat.id);
-      setIsSaved(true);
+    if (!user) {
+      setIsSignInOpen(true);
+      return;
     }
 
-    localStorage.setItem('savedFlats', JSON.stringify(savedFlats));
-    
-    // Dispatch a custom event to notify other components (like the /saved page)
-    window.dispatchEvent(new Event('storage'));
+    const userDocRef = doc(db, 'users', user.uid);
+
+    try {
+        const docSnap = await getDoc(userDocRef);
+        if (!docSnap.exists()) {
+            // Create doc if it doesn't exist
+            await setDoc(userDocRef, { savedFlats: [flat.id] });
+        } else {
+            // Update existing doc
+            await updateDoc(userDocRef, {
+                savedFlats: isSaved ? arrayRemove(flat.id) : arrayUnion(flat.id)
+            });
+        }
+    } catch (error) {
+        console.error("Error updating saved flats: ", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Could not update your saved listings. Please try again.'
+        });
+    }
   };
 
   return (
+    <>
+    <SignInDialog open={isSignInOpen} onOpenChange={setIsSignInOpen} />
     <Card className="overflow-hidden h-full transition-shadow duration-300 hover:shadow-xl rounded-2xl flex flex-col">
       <div className="relative aspect-[4/3] overflow-hidden group">
         <Image
@@ -135,5 +175,6 @@ export function FlatCard({ flat }: FlatCardProps) {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }
