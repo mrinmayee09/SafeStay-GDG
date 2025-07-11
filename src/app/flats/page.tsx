@@ -14,9 +14,9 @@ const allLocations = [...new Set(flats.map((f) => f.location))];
 const allRoomTypes = [...new Set(flats.map((f) => f.type))];
 
 export default function FlatsPage() {
-  const [budget, setBudget] = useState('');
-  const [location, setLocation] = useState('');
-  const [roomType, setRoomType] = useState('');
+  const [budget, setBudget] = useState('all');
+  const [location, setLocation] = useState('all');
+  const [roomType, setRoomType] = useState('all');
   const [safetyRating, setSafetyRating] = useState([3]);
 
   const filteredFlats = useMemo(() => {
@@ -27,25 +27,30 @@ export default function FlatsPage() {
       }
       
       // Location Filter
-      if (location && flat.location !== location) {
+      if (location !== 'all' && flat.location !== location) {
         return false;
       }
 
       // Room Type Filter
-      if (roomType && flat.type !== roomType) {
+      if (roomType !== 'all' && flat.type !== roomType) {
         return false;
       }
       
       // Budget Filter
-      if (budget) {
-        const [min, max] = budget.split('-').map(Number);
+      if (budget && budget !== 'all') {
+        const [minStr, maxStr] = budget.split('-');
+        const min = Number(minStr);
+        const max = maxStr ? Number(maxStr) : null;
+        
         if (max) {
           // Range like "15000-25000"
           if (flat.price < min || flat.price > max) return false;
         } else {
             // Unbounded range like "<15000" or ">40000"
-            if (budget.startsWith('<') && flat.price >= min) return false;
-            if (budget.startsWith('>') && flat.price <= min) return false;
+            // For these, we extract the number from the string
+            const budgetVal = parseInt(budget.replace(/<|>/g, ''));
+            if (budget.startsWith('<') && flat.price >= budgetVal) return false;
+            if (budget.startsWith('>') && flat.price <= budgetVal) return false;
         }
       }
 
@@ -70,7 +75,7 @@ export default function FlatsPage() {
                   <SelectValue placeholder="Any Budget" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any Budget</SelectItem>
+                  <SelectItem value="all">Any Budget</SelectItem>
                   <SelectItem value="<15000">Under ₹15,000</SelectItem>
                   <SelectItem value="15000-25000">₹15,000 - ₹25,000</SelectItem>
                   <SelectItem value="25000-40000">₹25,000 - ₹40,000</SelectItem>
@@ -85,7 +90,7 @@ export default function FlatsPage() {
                   <SelectValue placeholder="Any Location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any Location</SelectItem>
+                  <SelectItem value="all">Any Location</SelectItem>
                   {allLocations.map((loc) => (
                     <SelectItem key={loc} value={loc}>{loc}</SelectItem>
                   ))}
@@ -99,7 +104,7 @@ export default function FlatsPage() {
                   <SelectValue placeholder="Any Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any Type</SelectItem>
+                  <SelectItem value="all">Any Type</SelectItem>
                    {allRoomTypes.map((type) => (
                     <SelectItem key={type} value={type}>{type}</SelectItem>
                   ))}
