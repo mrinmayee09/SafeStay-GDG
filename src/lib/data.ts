@@ -65,7 +65,11 @@ export const flats: Flat[] = [
     highlights: ['5-Min Walk to College', 'Women-only Building', '24/7 Security'],
     tags: ['Student Friendly', 'Furnished', 'Near Station'],
     isFeatured: true,
-    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    images: [
+      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+      'https://images.unsplash.com/photo-1560184897-ae75f418493e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+      'https://images.unsplash.com/photo-1571508601891-ca5e7a713859?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+    ],
     safetyRating: 4.8,
     landlord: {
       name: 'Gupta Real Estate',
@@ -83,7 +87,11 @@ export const flats: Flat[] = [
     highlights: ['Strict In-times', 'CCTV Coverage', 'Female Warden'],
     tags: ['Female Students Only', 'Well-lit Surroundings', 'Close to Market'],
     isFeatured: true,
-    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    images: [
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1558&q=80',
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80'
+    ],
     safetyRating: 4.9,
     landlord: {
       name: 'Aunty\'s PG Services',
@@ -101,7 +109,10 @@ export const flats: Flat[] = [
     highlights: ['Premium Amenities', 'Gated Community', '24/7 Power Backup'],
     tags: ['Spacious', 'Sea View', 'Student Group Friendly'],
     isFeatured: true,
-    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    images: [
+      'https://images.unsplash.com/photo-1560448075-bb485b067938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+      'https://images.unsplash.com/photo-1565623833408-d77e39b88af6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80'
+    ],
     safetyRating: 4.5,
     landlord: {
       name: 'Cityscape Rentals',
@@ -119,7 +130,10 @@ export const flats: Flat[] = [
     highlights: ['Close to Station', 'Grocery Nearby', 'Quiet Lane'],
     tags: ['Budget Friendly', 'Good for 1-2 people', 'Safe Locality'],
     isFeatured: false,
-    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    images: [
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+      'https://images.unsplash.com/photo-1556020685-ae41abfc9365?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80'
+    ],
     safetyRating: 4.2,
     landlord: {
       name: 'Sharma Properties',
@@ -137,7 +151,9 @@ export const flats: Flat[] = [
     highlights: ['Student Focused', 'Quiet Hours', 'Close to Colleges'],
     tags: ['Walking distance to colleges', 'Safe for women'],
     isFeatured: false,
-    images: ['https://placehold.co/600x400.png'],
+    images: [
+      'https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+    ],
     safetyRating: 4.8,
     landlord: {
       name: 'Campus Living',
@@ -155,7 +171,11 @@ export const flats: Flat[] = [
     highlights: ['Family-friendly locality', 'Good Ventilation', 'Newly Renovated'],
     tags: ['Quiet Living', 'Spacious Rooms', 'Good Connectivity'],
     isFeatured: false,
-    images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
+    images: [
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80',
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+      'https://images.unsplash.com/photo-1560185007-5f0bb1866cab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+    ],
     safetyRating: 4.6,
     landlord: {
       name: 'Western Homes LLC',
@@ -174,7 +194,7 @@ export const roommates: Roommate[] = [
     year: 'Third Year',
     branch: 'CST',
     hobbies: ['Reading', 'Debating', 'Gaming'],
-    photo: 'https://placehold.co/100x100.png',
+    photo: '/images/jessica.png',
     personality: 'Night Owl, Focused',
     socialHabits: 'Prefers quiet nights in, but open to occasional outings.',
   },
@@ -185,7 +205,7 @@ export const roommates: Roommate[] = [
     year: 'Second Year',
     branch: 'IT',
     hobbies: ['Painting', 'Yoga', 'Binge-watching'],
-    photo: 'https://placehold.co/100x100.png',
+    photo: '/images/aditi.png',
     personality: 'Early Bird, Creative',
     socialHabits: 'Enjoys small groups and cafe hopping.',
   },
@@ -196,7 +216,7 @@ export const roommates: Roommate[] = [
     year: 'Fourth Year',
     branch: 'CE',
     hobbies: ['Cooking', 'Running', 'Movies'],
-    photo: 'https://placehold.co/100x100.png',
+    photo: '/images/priya.png',
     personality: 'Early Bird, Organized',
     socialHabits: 'Loves hosting study groups and weekend dinners.',
   },
@@ -207,7 +227,7 @@ export const roommates: Roommate[] = [
     year: 'Second Year',
     branch: 'DS',
     hobbies: ['Baking', 'Concerts', 'Coding'],
-    photo: 'https://placehold.co/100x100.png',
+    photo: '/images/rhea.png',
     personality: 'Night Owl, Social',
     socialHabits: 'Loves going out and exploring the city on weekends.',
   },
@@ -218,7 +238,7 @@ export const roommates: Roommate[] = [
     year: 'Third Year',
     branch: 'AI',
     hobbies: ['Thrifting', 'Coffee shops', 'Reading'],
-    photo: 'https://placehold.co/100x100.png',
+    photo: '/images/mei.png',
     personality: 'Flexible schedule, Introverted',
     socialHabits: 'Prefers one-on-one conversations and quiet activities.',
   },
@@ -229,7 +249,7 @@ export const roommates: Roommate[] = [
     year: 'Fourth Year',
     branch: 'ENC',
     hobbies: ['Gardening', 'Volunteering', 'Music'],
-    photo: 'https://placehold.co/100x100.png',
+    photo: '/images/fatima.png',
     personality: 'Early Bird, Community-minded',
     socialHabits: 'Often busy with extracurriculars, enjoys a calm home.',
   },

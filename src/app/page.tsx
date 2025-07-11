@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import Link from 'next/link';
-import { ArrowRight, Search, ShieldCheck, Star, CheckCircle2, TrendingUp } from "lucide-react";
+import { ArrowRight, Search, ShieldCheck, Star, CircleCheck, TrendingUp } from "lucide-react";
 import { flats } from "@/lib/data";
 import { FlatCard } from "@/components/flat-card";
 
@@ -25,7 +25,7 @@ const stats = [
   {
     value: "4.6",
     label: "Avg Safety Rating",
-    icon: CheckCircle2,
+    icon: CircleCheck,
     color: "text-green-500",
     bgColor: "bg-green-100",
   },
