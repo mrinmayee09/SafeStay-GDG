@@ -1,18 +1,57 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { FlatCard } from '@/components/flat-card';
 import { flats, type Flat } from '@/lib/data';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { Users } from 'lucide-react';
+
+const allLocations = [...new Set(flats.map((f) => f.location))];
+const allRoomTypes = [...new Set(flats.map((f) => f.type))];
 
 export default function FlatsPage() {
+  const [budget, setBudget] = useState('');
+  const [location, setLocation] = useState('');
+  const [roomType, setRoomType] = useState('');
   const [safetyRating, setSafetyRating] = useState([3]);
 
-  // In a real app, these would be controlled states that filter the list
-  // For this prototype, the UI is just for show.
+  const filteredFlats = useMemo(() => {
+    return flats.filter((flat) => {
+      // Safety Rating Filter
+      if (flat.safetyRating < safetyRating[0]) {
+        return false;
+      }
+      
+      // Location Filter
+      if (location && flat.location !== location) {
+        return false;
+      }
+
+      // Room Type Filter
+      if (roomType && flat.type !== roomType) {
+        return false;
+      }
+      
+      // Budget Filter
+      if (budget) {
+        const [min, max] = budget.split('-').map(Number);
+        if (max) {
+          // Range like "15000-25000"
+          if (flat.price < min || flat.price > max) return false;
+        } else {
+            // Unbounded range like "<15000" or ">40000"
+            if (budget.startsWith('<') && flat.price >= min) return false;
+            if (budget.startsWith('>') && flat.price <= min) return false;
+        }
+      }
+
+      return true;
+    });
+  }, [safetyRating, location, roomType, budget]);
 
   return (
     <div className="container mx-auto py-8 px-4 md:px-6">
@@ -26,11 +65,12 @@ export default function FlatsPage() {
         <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
             <div>
               <Label htmlFor="budget" className="text-sm font-medium">Budget Range</Label>
-              <Select>
+              <Select value={budget} onValueChange={setBudget}>
                 <SelectTrigger id="budget" className="mt-2">
                   <SelectValue placeholder="Any Budget" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="">Any Budget</SelectItem>
                   <SelectItem value="<15000">Under ₹15,000</SelectItem>
                   <SelectItem value="15000-25000">₹15,000 - ₹25,000</SelectItem>
                   <SelectItem value="25000-40000">₹25,000 - ₹40,000</SelectItem>
@@ -40,30 +80,29 @@ export default function FlatsPage() {
             </div>
              <div>
               <Label htmlFor="location" className="text-sm font-medium">Location</Label>
-              <Select>
+              <Select value={location} onValueChange={setLocation}>
                 <SelectTrigger id="location" className="mt-2">
                   <SelectValue placeholder="Any Location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="bandra">Bandra</SelectItem>
-                  <SelectItem value="andheri">Andheri</SelectItem>
-                  <SelectItem value="juhu">Juhu</SelectItem>
-                  <SelectItem value="powai">Powai</SelectItem>
-                  <SelectItem value="vile-parle">Vile Parle</SelectItem>
+                  <SelectItem value="">Any Location</SelectItem>
+                  {allLocations.map((loc) => (
+                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
              <div>
               <Label htmlFor="room-type" className="text-sm font-medium">Room Type</Label>
-              <Select>
+              <Select value={roomType} onValueChange={setRoomType}>
                 <SelectTrigger id="room-type" className="mt-2">
                   <SelectValue placeholder="Any Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1rk">1RK</SelectItem>
-                  <SelectItem value="1bhk">1BHK</SelectItem>
-                  <SelectItem value="2bhk">2BHK</SelectItem>
-                  <SelectItem value="pg">Paying Guest</SelectItem>
+                  <SelectItem value="">Any Type</SelectItem>
+                   {allRoomTypes.map((type) => (
+                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -83,11 +122,19 @@ export default function FlatsPage() {
       </Card>
       
       {/* Listings Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {flats.map((flat) => (
-          <FlatCard key={flat.id} flat={flat} />
-        ))}
-      </div>
+      {filteredFlats.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredFlats.map((flat) => (
+            <FlatCard key={flat.id} flat={flat} />
+            ))}
+        </div>
+      ) : (
+         <div className="flex flex-col items-center justify-center text-center h-full min-h-[40vh] bg-card rounded-lg p-8 border-dashed border-2">
+            <Users className="w-16 h-16 text-muted-foreground/50 mb-4" />
+            <p className="text-lg font-medium">No Listings Match Your Criteria</p>
+            <p className="text-muted-foreground mt-2">Try adjusting your filters or checking back later for new listings.</p>
+        </div>
+      )}
     </div>
   );
 }
