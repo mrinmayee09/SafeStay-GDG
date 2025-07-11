@@ -7,6 +7,8 @@ import { ArrowRight, Search, ShieldCheck, Star, CircleCheck, TrendingUp } from "
 import { flats } from "@/lib/data";
 import { FlatCard } from "@/components/flat-card";
 
+
+
 const stats = [
   {
     value: "500+",

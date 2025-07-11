@@ -89,7 +89,7 @@ export function ReportIncidentCard({ flatId }: ReportIncidentCardProps) {
                                     placeholder="e.g., Unsafe entry, Harassment" 
                                     className="col-span-3"
                                     value={issueType}
-                                    onChange={(e) => setIssueType(e.target.value)}
+                                    onChange={(e) => setIssueType(e.target.value)}   
                                     disabled={isLoading}
                                 />
                             </div>

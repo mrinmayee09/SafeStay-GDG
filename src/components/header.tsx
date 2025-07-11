@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Search, Users, PlusSquare, Bookmark, LogOut, ChevronDown } from "lucide-react";
+import { Search, Users, PlusSquare, Bookmark, LogOut, ChevronDown, Menu } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut, type User } from "firebase/auth";
@@ -16,6 +16,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 
 
@@ -66,40 +67,66 @@ export function Header() {
         (pathname === '/' ? "bg-[#2a0d45]" : "bg-background border-b")
     )}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
-        <div className="flex items-center gap-12">
+        <div className="flex items-center gap-4">
+          {/* Mobile Menu */}
+          <div className="md:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className={cn(isTransparent && "text-white hover:text-white hover:bg-white/10")}>
+                  <Menu className="w-6 h-6" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {navLinks.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link href={link.href} className="flex items-center gap-2">
+                       <link.icon className="w-4 h-4 text-muted-foreground" />
+                      <span>{link.label}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        
           <Link href="/" className="flex items-center space-x-2">
             <span className={cn(
               "font-bold text-2xl transition-colors",
               isTransparent ? "text-white" : "text-primary"
             )}>SafeStay</span>
           </Link>
-          <nav className="hidden md:flex items-center">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary px-4 py-2 rounded-lg",
-                   pathname.startsWith(link.href) ? "text-primary bg-primary/10" :
-                   isTransparent ? "text-purple-200 hover:text-white" : "text-muted-foreground"
-                )}
-              >
-                <link.icon className="w-4 h-4" />
-                <span>{link.label}</span>
-              </Link>
-            ))}
-          </nav>
         </div>
+        
+        <nav className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary px-4 py-2 rounded-lg",
+                  pathname.startsWith(link.href) ? "text-primary bg-primary/10" :
+                  isTransparent ? "text-purple-200 hover:text-white" : "text-muted-foreground"
+              )}
+            >
+              <link.icon className="w-4 h-4" />
+              <span>{link.label}</span>
+            </Link>
+          ))}
+        </nav>
+
         <div className="flex items-center space-x-2">
             {user ? (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                          <Button variant="ghost" className={cn("flex items-center gap-2", isTransparent && "text-white hover:text-white hover:bg-white/10")}>
-                            {user.email}
+                            {user.email?.split('@')[0]}
                             <ChevronDown className="w-4 h-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                        <DropdownMenuItem disabled>{user.email}</DropdownMenuItem>
+                        <DropdownMenuSeparator/>
                         <DropdownMenuItem onClick={handleSignOut}>
                              <LogOut className="mr-2 h-4 w-4" />
                              Sign Out

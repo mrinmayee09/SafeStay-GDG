@@ -13,6 +13,7 @@ import { UploadCloud } from "lucide-react";
 
 export default function PostListingPage() {
     const [safetyRating, setSafetyRating] = useState([3]);
+    
 
     return (
         <div className="container mx-auto py-28 px-4 md:px-6">
