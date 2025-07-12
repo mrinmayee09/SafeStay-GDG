@@ -5,6 +5,12 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "apphosting": "REPLACE_WITH_YOUR_BACKEND_ID"
+      }
     ]
   }
 }
