@@ -64,7 +64,7 @@ export default function FlatDetailPage({ params }: PageProps) {
               <div className="flex items-center gap-4 pt-2">
                 <Badge className="bg-green-100 text-green-800 border-green-200 hover:bg-green-100/80 text-sm">
                     <Shield className="w-4 h-4 mr-1.5" />
-                    Safety: {flat.safetyRating}/5
+                    Safety Rating: {flat.safetyRating}/5
                 </Badge>
                 <div className="flex items-center gap-2">
                     <StarRating rating={flat.landlord.rating} size={18} />
