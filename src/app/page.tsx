@@ -1,4 +1,8 @@
 
+'use client';
+
+import { useState } from "react";
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -42,6 +46,17 @@ const stats = [
 
 export default function LandingPage() {
   const featuredFlats = flats.filter(f => f.isFeatured);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/flats?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push('/flats');
+    }
+  };
 
   return (
     <>
@@ -56,14 +71,18 @@ export default function LandingPage() {
               Discover trusted accommodation with real reviews from female students. Your safety and comfort are our top priorities.
             </p>
             <div className="mt-8 w-full max-w-2xl">
-              <div className="relative">
+              <form onSubmit={handleSearch} className="relative">
                 <Input
                   type="search"
                   placeholder="Search by location, area, or property name..."
                   className="w-full h-14 pl-12 pr-4 rounded-full text-base"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground" />
-              </div>
+                <button type="submit" className="absolute left-4 top-1/2 -translate-y-1/2">
+                   <Search className="h-6 w-6 text-muted-foreground" />
+                </button>
+              </form>
               <div className="mt-4 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm text-purple-300">
                 <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-400"></span>Verified Properties</span>
                 <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-400"></span>Real Student Reviews</span>

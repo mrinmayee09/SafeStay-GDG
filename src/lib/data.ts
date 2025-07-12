@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 export type Review = {
@@ -251,5 +252,16 @@ export const roommates: Roommate[] = [
     photo: '/images/woman_2922752.png',
     personality: 'Early Bird, Community-minded',
     socialHabits: 'Often busy with extracurriculars, enjoys a calm home.',
+  },
+  {
+    id: 7,
+    name: 'Aisha',
+    age: 18,
+    year: 'First Year',
+    branch: 'CST',
+    hobbies: ['Exploring cafes', 'Photography', 'Music'],
+    photo: '/images/woman_2922730.png',
+    personality: 'Early Bird, Curious',
+    socialHabits: 'Eager to make new friends and explore the city.',
   },
 ];

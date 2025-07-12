@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -18,7 +19,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 const allBranches = [...new Set(allRoommates.map((r) => r.branch))];
 const allHobbies = [...new Set(allRoommates.flatMap((r) => r.hobbies))];
-const allYears = [...new Set(allRoommates.map((r) => r.year))];
+const allYears = [...new Set(allRoommates.map((r) => r.year))].sort();
 
 export default function RoommatesPage() {
   const [filters, setFilters] = useState({

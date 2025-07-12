@@ -1,26 +1,45 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { FlatCard } from '@/components/flat-card';
 import { flats, type Flat } from '@/lib/data';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Users } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Users, Search } from 'lucide-react';
 
 const allLocations = [...new Set(flats.map((f) => f.location))];
 const allRoomTypes = [...new Set(flats.map((f) => f.type))];
 
-export default function FlatsPage() {
+function FlatsPageContent() {
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
+
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [budget, setBudget] = useState('all');
   const [location, setLocation] = useState('all');
   const [roomType, setRoomType] = useState('all');
   const [safetyRating, setSafetyRating] = useState([3]);
+  
+  // Effect to update search query if URL changes
+  useEffect(() => {
+    setSearchQuery(initialSearch);
+  }, [initialSearch]);
+
 
   const filteredFlats = useMemo(() => {
     return flats.filter((flat) => {
+      // Search Query Filter (name or location)
+      if (searchQuery && 
+         !flat.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+         !flat.location.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return false;
+      }
+        
       // Safety Rating Filter
       if (flat.safetyRating < safetyRating[0]) {
         return false;
@@ -56,7 +75,7 @@ export default function FlatsPage() {
 
       return true;
     });
-  }, [safetyRating, location, roomType, budget]);
+  }, [searchQuery, safetyRating, location, roomType, budget]);
 
   return (
     <div className="container mx-auto py-8 px-4 md:px-6">
@@ -68,6 +87,19 @@ export default function FlatsPage() {
       {/* Filters */}
       <Card className="mb-8 shadow-sm">
         <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
+            <div className="lg:col-span-4">
+                <Label htmlFor="search" className="text-sm font-medium">Search by Name or Location</Label>
+                <div className="relative mt-2">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input 
+                        id="search"
+                        placeholder="e.g., Cozy 1BHK or Vile Parle..."
+                        className="pl-10"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+            </div>
             <div>
               <Label htmlFor="budget" className="text-sm font-medium">Budget Range</Label>
               <Select value={budget} onValueChange={setBudget}>
@@ -142,4 +174,13 @@ export default function FlatsPage() {
       )}
     </div>
   );
+}
+
+
+export default function FlatsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <FlatsPageContent />
+        </Suspense>
+    )
 }
