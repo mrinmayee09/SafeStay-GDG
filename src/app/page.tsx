@@ -75,7 +75,7 @@ export default function LandingPage() {
                 <Input
                   type="search"
                   placeholder="Search by location, area, or property name..."
-                  className="w-full h-14 pl-12 pr-4 rounded-full text-base"
+                  className="w-full h-14 pl-12 pr-4 rounded-full text-base text-black"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />

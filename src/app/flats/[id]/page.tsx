@@ -18,6 +18,13 @@ type PageProps = {
   };
 };
 
+export async function generateStaticParams() {
+  return flats.map((flat) => ({
+    id: flat.id.toString(),
+  }));
+}
+
+
 export default function FlatDetailPage({ params }: PageProps) {
   const flat = flats.find((f) => f.id === parseInt(params.id));
 
