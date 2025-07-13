@@ -65,7 +65,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="min-h-[60vh] md:min-h-[50vh] flex flex-col justify-center items-center text-center pt-20 pb-12 text-white">
             <h5 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-            Real experiences. Trusted spaces.
+            Real experiences and Trusted spaces.
             </h5>
             <p className="mt-4 text-lg text-purple-200 max-w-2xl mx-auto">
               Discover trusted accommodation with real reviews from female students. Your safety and comfort are our top priorities.
