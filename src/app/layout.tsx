@@ -7,7 +7,7 @@ import { Header } from '@/components/header';
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' })
 
 export const metadata: Metadata = {
-  title: 'SafeStay - Safe Housing for Students',
+  title: 'SafeStay',
   description: 'Find safe and verified flats and roommates for female students.',
 };
 
